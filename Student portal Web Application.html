@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Students Portal</title>
+  <style>
+    :root{
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --bg:#f3f4f6;
+      --radius:12px;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; background:var(--bg); color:#111827; -webkit-font-smoothing:antialiased; padding:28px;
+    }
+    .container{max-width:1100px; margin:0 auto;}
+    header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px}
+    h1{font-size:20px; margin:0}
+    .grid{display:grid; grid-template-columns:1fr 360px; gap:18px}
+    .card{background:var(--card); border-radius:var(--radius); box-shadow:0 6px 18px rgba(15,23,42,0.06); padding:18px}
+
+    /* left column sections */
+    .section{margin-bottom:14px}
+    .section h2{font-size:16px; margin:0 0 12px 0}
+
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px}
+    input[type=text], input[type=date], input[type=tel], select, textarea{width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e7ea; box-sizing:border-box}
+    textarea{min-height:80px}
+    .row{display:flex; gap:12px}
+    .row .col{flex:1}
+    .btn{display:inline-block; background:var(--accent); color:white; padding:8px 12px; border-radius:8px; border:none; cursor:pointer}
+    .btn.ghost{background:transparent; color:var(--accent); border:1px solid rgba(37,99,235,0.15)}
+
+    /* Fee table */
+    table{width:100%; border-collapse:collapse}
+    th,td{padding:8px 10px; text-align:left; border-bottom:1px solid #f1f2f4}
+    th{font-size:13px; color:var(--muted)}
+
+    /* Attendance list */
+    .student-list{max-height:260px; overflow:auto}
+    .student-item{display:flex; align-items:center; justify-content:space-between; padding:8px 6px; border-radius:8px}
+    .student-item:nth-child(odd){background:#fbfdff}
+
+    /* Syllabus accordion */
+    .accordion-item{border:1px solid #eef2ff; border-radius:8px; margin-bottom:8px}
+    .acc-head{padding:10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center}
+    .acc-body{padding:10px; display:none}
+
+    /* Result table */
+    .result-table td input{width:80px}
+
+    /* responsive */
+    @media (max-width:960px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Students Portal — Demo</h1>
+      <div>
+        <button class="btn" onclick="saveData()">Save Data (to localStorage)</button>
+        <button class="btn ghost" onclick="loadData()">Load</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <!-- Student Information -->
+        <section class="card section">
+          <h2>1. Student Information</h2>
+          <form id="studentForm" onsubmit="event.preventDefault(); addStudent()">
+            <div class="row">
+              <div class="col">
+                <label for="name">Name</label>
+                <input id="name" type="text" required />
+              </div>
+              <div class="col">
+                <label for="fatherName">Father's Name</label>
+                <input id="fatherName" type="text" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:8px">
+              <div class="col">
+                <label for="dob">Date of Birth</label>
+                <input id="dob" type="date" />
+              </div>
+              <div class="col">
+                <label for="phone">Phone No.</label>
+                <input id="phone" type="tel" pattern="[0-9+\- ]*" />
+              </div>
+              <div class="col">
+                <label for="father's contact">Father's contact</label>
+                <input id="father's contact" type="tel" pattern="[0-9+\- ]*" />
+              </div>
+              <div class="col">
+                <label for="email">Email</label>
+                <input id="email" type="tel" pattern="[0-9+, Characters\- ]*" />
+              </div>
+            </div>
+
+            <div style="margin-top:8px">
+              <label>Address</label>
+              <div class="row">
+                <input list="cities" id="city" name="city" placeholder="City">
+
+<datalist id="cities">
+  <option value="Agra">
+  <option value="Ahmedabad">
+  <option value="Ajmer">
+  <option value="Aligarh">
+  <option value="Allahabad">
+  <option value="Ambala">
+  <option value="Amritsar">
+  <option value="Anand">
+  <option value="Aurangabad">
+  <option value="Bangalore">
+  <option value="Bareilly">
+  <option value="Belgaum">
+  <option value="Bhavnagar">
+  <option value="Bhilai">
+  <option value="Bhiwani">
+  <option value="Bhilwara">
+  <option value="Bhopal">
+  <option value="Bhubaneswar">
+  <option value="Bikaner">
+  <option value="Bilaspur">
+  <option value="Chandigarh">
+  <option value="Charkhi Dadri">
+  <option value="Chennai">
+  <option value="Coimbatore">
+  <option value="Cuttack">
+  <option value="Darjeeling">
+  <option value="Davanagere">
+  <option value="Dehradun">
+  <option value="Delhi">
+  <option value="Dhanbad">
+  <option value="Durgapur">
+  <option value="Faridabad">
+  <option value="Fatehabad">
+  <option value="Firozabad">
+  <option value="Gandhinagar">
+  <option value="Gaya">
+  <option value="Ghaziabad">
+  <option value="Gurgaon">
+  <option value="Guwahati">
+  <option value="Gwalior">
+  <option value="Hisar">
+  <option value="Hubli-Dharwad">
+  <option value="Hyderabad">
+  <option value="Indore">
+  <option value="Jabalpur">
+  <option value="Jaipur">
+  <option value="Jalandhar">
+  <option value="Jamnagar">
+  <option value="Jamshedpur">
+  <option value="Jhajjar">
+  <option value="Jhansi">
+  <option value="Jind">
+  <option value="Jodhpur">
+  <option value="Kanpur">
+  <option value="Kaithal">
+  <option value="Karnal">
+  <option value="Kochi">
+  <option value="Kolkata">
+  <option value="Kota">
+  <option value="Kozhikode">
+  <option value="Kurukshetra">
+  <option value="Lucknow">
+  <option value="Ludhiana">
+  <option value="Madurai">
+  <option value="Mahendragarh">
+  <option value="Mangalore">
+  <option value="Meerut">
+  <option value="Moradabad">
+  <option value="Mumbai">
+  <option value="Muzaffarnagar">
+  <option value="Mysore">
+  <option value="Nadiad">
+  <option value="Nagpur">
+  <option value="Nanded">
+  <option value="Narnaul">
+  <option value="Nashik">
+  <option value="Ooty">
+  <option value="Osmanabad">
+  <option value="Pali">
+  <option value="Palwal">
+  <option value="Panchkula">
+  <option value="Panipat">
+  <option value="Patiala">
+  <option value="Patna">
+  <option value="Pimpri-Chinchwad">
+  <option value="Pune">
+  <option value="Puri">
+  <option value="Raipur">
+  <option value="Rajahmundry">
+  <option value="Rajkot">
+  <option value="Ranchi">
+  <option value="Rewari">
+  <option value="Rohtak">
+  <option value="Rourkela">
+  <option value="Saharanpur">
+  <option value="Salem">
+  <option value="Sangli">
+  <option value="Shimla">
+  <option value="Siliguri">
+  <option value="Sirsa">
+  <option value="Solapur">
+  <option value="Sonipat">
+  <option value="Sri Ganganagar">
+  <option value="Surat">
+  <option value="Thane">
+  <option value="Thiruvananthapuram">
+  <option value="Tiruchirappalli">
+  <option value="Tirunelveli">
+  <option value="Tirupati">
+  <option value="Udaipur">
+  <option value="Ujjain">
+  <option value="Vadodara">
+  <option value="Varanasi">
+  <option value="Vasai-Virar">
+  <option value="Vijayawada">
+  <option value="Visakhapatnam">
+  <option value="Warangal">
+  <option value="Yamunanagar">
+</datalist>
+               <input list="states" id="state" name="state" placeholder="Search State">
+<datalist id="states">
+  <option value="Andhra Pradesh">
+  <option value="Arunachal Pradesh">
+  <option value="Assam">
+  <option value="Bihar">
+  <option value="Chhattisgarh">
+  <option value="Goa">
+  <option value="Gujarat">
+  <option value="Haryana">
+  <option value="Himachal Pradesh">
+  <option value="Jammu and Kashmir">
+  <option value="Jharkhand">
+  <option value="Karnataka">
+  <option value="Kerala">
+  <option value="Madhya Pradesh">
+  <option value="Maharashtra">
+  <option value="Manipur">
+  <option value="Meghalaya">
+  <option value="Mizoram">
+  <option value="Nagaland">
+  <option value="Odisha">
+  <option value="Punjab">
+  <option value="Rajasthan">
+  <option value="Sikkim">
+  <option value="Tamil Nadu">
+  <option value="Telangana">
+  <option value="Tripura">
+  <option value="Uttarakhand">
+  <option value="Uttar Pradesh">
+  <option value="West Bengal">
+  <option value="Andaman and Nicobar Islands">
+  <option value="Chandigarh">
+  <option value="Dadra and Nagar Haveli and Daman and Diu">
+  <option value="Delhi">
+  <option value="Lakshadweep">
+  <option value="Puducherry">
+</datalist>
+            <input list="countries" id="country" name="country" placeholder="Search Country">
+
+<datalist id="countries">
+  <option value="Afghanistan">
+  <option value="Albania">
+  <option value="Algeria">
+  <option value="Andorra">
+  <option value="Angola">
+  <option value="Antigua and Barbuda">
+  <option value="Argentina">
+  <option value="Armenia">
+  <option value="Australia">
+  <option value="Austria">
+  <option value="Azerbaijan">
+  <option value="Bahamas">
+  <option value="Bahrain">
+  <option value="Bangladesh">
+  <option value="Barbados">
+  <option value="Belarus">
+  <option value="Belgium">
+  <option value="Belize">
+  <option value="Benin">
+  <option value="Bhutan">
+  <option value="Bolivia">
+  <option value="Bosnia and Herzegovina">
+  <option value="Botswana">
+  <option value="Brazil">
+  <option value="Brunei">
+  <option value="Bulgaria">
+  <option value="Burkina Faso">
+  <option value="Burundi">
+  <option value="Côte d’Ivoire">
+  <option value="Cabo Verde">
+  <option value="Cambodia">
+  <option value="Cameroon">
+  <option value="Canada">
+  <option value="Central African Republic">
+  <option value="Chad">
+  <option value="Chile">
+  <option value="China">
+  <option value="Colombia">
+  <option value="Comoros">
+  <option value="Congo, Democratic Republic of the">
+  <option value="Congo, Republic of the">
+  <option value="Costa Rica">
+  <option value="Croatia">
+  <option value="Cuba">
+  <option value="Cyprus">
+  <option value="Czechia">
+  <option value="Denmark">
+  <option value="Djibouti">
+  <option value="Dominica">
+  <option value="Dominican Republic">
+  <option value="Ecuador">
+  <option value="Egypt">
+  <option value="El Salvador">
+  <option value="Equatorial Guinea">
+  <option value="Eritrea">
+  <option value="Estonia">
+  <option value="Eswatini">
+  <option value="Ethiopia">
+  <option value="Fiji">
+  <option value="Finland">
+  <option value="France">
+  <option value="Gabon">
+  <option value="Gambia">
+  <option value="Georgia">
+  <option value="Germany">
+  <option value="Ghana">
+  <option value="Greece">
+  <option value="Grenada">
+  <option value="Guatemala">
+  <option value="Guinea">
+  <option value="Guinea-Bissau">
+  <option value="Guyana">
+  <option value="Haiti">
+  <option value="Honduras">
+  <option value="Hungary">
+  <option value="Iceland">
+  <option value="India">
+  <option value="Indonesia">
+  <option value="Iran">
+  <option value="Iraq">
+  <option value="Ireland">
+  <option value="Israel">
+  <option value="Italy">
+  <option value="Jamaica">
+  <option value="Japan">
+  <option value="Jordan">
+  <option value="Kazakhstan">
+  <option value="Kenya">
+  <option value="Kiribati">
+  <option value="Kuwait">
+  <option value="Kyrgyzstan">
+  <option value="Laos">
+  <option value="Latvia">
+  <option value="Lebanon">
+  <option value="Lesotho">
+  <option value="Liberia">
+  <option value="Libya">
+  <option value="Liechtenstein">
+  <option value="Lithuania">
+  <option value="Luxembourg">
+  <option value="Madagascar">
+  <option value="Malawi">
+  <option value="Malaysia">
+  <option value="Maldives">
+  <option value="Mali">
+  <option value="Malta">
+  <option value="Marshall Islands">
+  <option value="Mauritania">
+  <option value="Mauritius">
+  <option value="Mexico">
+  <option value="Micronesia">
+  <option value="Moldova">
+  <option value="Monaco">
+  <option value="Mongolia">
+  <option value="Montenegro">
+  <option value="Morocco">
+  <option value="Mozambique">
+  <option value="Myanmar">
+  <option value="Namibia">
+  <option value="Nauru">
+  <option value="Nepal">
+  <option value="Netherlands">
+  <option value="New Zealand">
+  <option value="Nicaragua">
+  <option value="Niger">
+  <option value="Nigeria">
+  <option value="North Korea">
+  <option value="North Macedonia">
+  <option value="Norway">
+  <option value="Oman">
+  <option value="Pakistan">
+  <option value="Palau">
+  <option value="Panama">
+  <option value="Papua New Guinea">
+  <option value="Paraguay">
+  <option value="Peru">
+  <option value="Philippines">
+  <option value="Poland">
+  <option value="Portugal">
+  <option value="Qatar">
+  <option value="Romania">
+  <option value="Russia">
+  <option value="Rwanda">
+  <option value="Saint Kitts and Nevis">
+  <option value="Saint Lucia">
+  <option value="Saint Vincent and the Grenadines">
+  <option value="Samoa">
+  <option value="San Marino">
+  <option value="Sao Tome and Principe">
+  <option value="Saudi Arabia">
+  <option value="Senegal">
+  <option value="Serbia">
+  <option value="Seychelles">
+  <option value="Sierra Leone">
+  <option value="Singapore">
+  <option value="Slovakia">
+  <option value="Slovenia">
+  <option value="Solomon Islands">
+  <option value="Somalia">
+  <option value="South Africa">
+  <option value="South Korea">
+  <option value="South Sudan">
+  <option value="Spain">
+  <option value="Sri Lanka">
+  <option value="Sudan">
+  <option value="Suriname">
+  <option value="Sweden">
+  <option value="Switzerland">
+  <option value="Syria">
+  <option value="Taiwan">
+  <option value="Tajikistan">
+  <option value="Tanzania">
+  <option value="Thailand">
+  <option value="Togo">
+  <option value="Tonga">
+  <option value="Trinidad and Tobago">
+  <option value="Tunisia">
+  <option value="Turkey">
+  <option value="Turkmenistan">
+  <option value="Tuvalu">
+  <option value="Uganda">
+  <option value="Ukraine">
+  <option value="United Arab Emirates">
+  <option value="United Kingdom">
+  <option value="United States of America">
+  <option value="Uruguay">
+  <option value="Uzbekistan">
+  <option value="Vanuatu">
+  <option value="Vatican City">
+  <option value="Venezuela">
+  <option value="Vietnam">
+  <option value="Yemen">
+  <option value="Zambia">
+  <option value="Zimbabwe">
+</datalist>
+                <input id="pincode" type="text" placeholder="Pin code" />
+              </div>
+            </div>
+
+            <div style="margin-top:10px; display:flex; gap:8px">
+              <button class="btn">Add Student</button>
+              <button type="button" class="btn ghost" onclick="clearForm()">Clear</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Department -->
+        <section class="card section">
+          <h2>2. Department / Branch</h2>
+          <label for="program">Program</label>
+          <select id="program" onchange="onProgramChange()">
+            <option value="btech">B.Tech</option>
+            <option value="mtech">M.Tech</option>
+            <option value="bca">BCA</option>
+            <option value="mca">MCA</option>
+            <option value="bba">BBA</option>
+            <option value="mba">MBA</option>
+          </select>
+
+          <div style="margin-top:8px">
+            <label for="branch">Branch</label>
+            <select id="branch">
+              <!-- branches will populate -->
+            </select>
+          </div>
+        </section>
+
+        <!-- Fee Structure -->
+        <section class="card section">
+          <h2>3. Fee Structure</h2>
+          <table id="feeTable">
+            <thead>
+              <tr><th>Component</th><th>Amount (INR)</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input value="Tuition Fee" /></td>
+                <td><input value="50000" /></td>
+                <td><button class="btn ghost" onclick="removeRow(this)">Remove</button></td>
+              </tr>
+              <tr>
+                <td><input value="Library Fee" /></td>
+                <td><input value="2000" /></td>
+                <td><button class="btn ghost" onclick="removeRow(this)">Remove</button></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr><td colspan="3"><button class="btn" onclick="addFeeRow()">Add Component</button> <span style="float:right">Total: ₹<span id="feeTotal">0</span></span></td></tr>
+            </tfoot>
+          </table>
+        </section>
+
+        <!-- Attendance -->
+        <section class="card section">
+          <h2>4. Attendance</h2>
+          <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
+            <input id="attSearch" placeholder="Search student" oninput="filterStudents()" />
+            <button class="btn" onclick="markAllPresent()">Mark All Present</button>
+            <button class="btn ghost" onclick="clearAttendance()">Clear</button>
+          </div>
+          <div class="student-list" id="studentList">
+            <!-- students inserted here -->
+          </div>
+        </section>
+
+        <!-- Syllabus -->
+        <section class="card section">
+          <h2>5. Syllabus</h2>
+          <div>
+            <div style="display:flex; gap:8px; margin-bottom:8px">
+              <input id="syTitle" placeholder="Topic title" />
+              <input id="syDesc" placeholder="Short description" />
+              <button class="btn" onclick="addSyllabus()">Add</button>
+            </div>
+            <div id="syllabusArea"></div>
+          </div>
+        </section>
+
+        <!-- Result -->
+        <section class="card section">
+          <h2>6. Result</h2>
+          <div style="margin-bottom:8px">
+            <button class="btn" onclick="addResultRow()">Add Student Result Row</button>
+          </div>
+          <table class="result-table" id="resultTable">
+            <thead><tr><th>Name</th><th>Marks (Max 100)</th><th>Grade</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- Right column: quick actions / preview -->
+      <aside>
+        <div class="card section">
+          <h2>Quick Preview</h2>
+          <div style="font-size:13px; color:var(--muted); margin-bottom:8px">Recently added students</div>
+          <ul id="previewStudents" style="padding-left:16px; margin:0"></ul>
+        </div>
+
+        <div class="card section">
+          <h2>Stats</h2>
+          <div style="display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:8px">
+            <div>
+              <div style="font-size:12px; color:var(--muted)">Total Students</div>
+              <div id="statTotal">0</div>
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--muted)">Average Marks</div>
+              <div id="statAvg">—</div>
+            </div>
+          </div>
+          <div style="font-size:12px; color:var(--muted)">Fee Total</div>
+          <div id="statFee">₹0</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // --- initial data and helpers ---
+    const branches = {
+      btech: ['Computer Science and Engineering (CSE)', 'Mechanical Engineering(ME)', 'Civil Engineering (CE)', 'Electronics and Communication Engineering (ECE)', 'Electrical and Electronics Engineering (EEE)'],
+      mtech: ['Computer Science and Engineering (CSE)', 'Mechanical Engineering(ME)', 'Civil Engineering (CE)']
+    }
+
+    function $(id){return document.getElementById(id)}
+
+    function onProgramChange(){
+      const p = $('program').value;
+      const sel = $('branch'); sel.innerHTML='';
+      branches[p].forEach(b=>{ const opt = document.createElement('option'); opt.value=b; opt.innerText=b; sel.appendChild(opt) })
+    }
+    onProgramChange();
+
+    // --- Student list management ---
+    let students = [];
+    function clearForm(){['name','fatherName','dob','phone','city','state','country','pincode'].forEach(id=>$(id).value='')}
+
+    function addStudent(){
+      const s = {
+        id:Date.now(),
+        name: $('name').value.trim(),
+        father: $('fatherName').value.trim(),
+        dob: $('dob').value,
+        phone: $('phone').value.trim(),
+        address:{city:$('city').value, state:$('state').value, country:$('country').value, pincode:$('pincode').value}
+      };
+      if(!s.name) return alert('Enter student name');
+      students.unshift(s);
+      renderStudents();
+      clearForm();
+    }
+
+    function renderStudents(){
+      const list = $('studentList'); list.innerHTML='';
+      const preview = $('previewStudents'); preview.innerHTML='';
+      students.forEach(st=>{
+        // attendance item
+        const div = document.createElement('div'); div.className='student-item';
+        div.innerHTML = `<div style="font-size:14px">${st.name}<div style="font-size:12px;color:var(--muted)">${st.phone || ''}</div></div>`;
+        const controls = document.createElement('div');
+        const present = document.createElement('input'); present.type='checkbox'; present.checked = false; present.onchange = ()=> st.present = present.checked; controls.appendChild(present);
+        const remove = document.createElement('button'); remove.className='btn ghost'; remove.style.marginLeft='8px'; remove.innerText='Delete'; remove.onclick = ()=>{ students = students.filter(x=>x.id!==st.id); renderStudents(); }
+        controls.appendChild(remove);
+        div.appendChild(controls);
+        list.appendChild(div);
+
+        // preview
+        const li = document.createElement('li'); li.innerText = st.name + (st.phone? ' — '+st.phone:''); preview.appendChild(li);
+      })
+      $('statTotal').innerText = students.length;
+    }
+
+    function filterStudents(){
+      const q = $('attSearch').value.toLowerCase();
+      const items = document.querySelectorAll('#studentList .student-item');
+      items.forEach(it=>{ it.style.display = it.innerText.toLowerCase().includes(q)?'flex':'none' })
+    }
+
+    function markAllPresent(){ students.forEach(s=> s.present=true); // update checkboxes
+      document.querySelectorAll('#studentList input[type=checkbox]').forEach(cb=> cb.checked=true);
+    }
+    function clearAttendance(){ students.forEach(s=> s.present=false); document.querySelectorAll('#studentList input[type=checkbox]').forEach(cb=> cb.checked=false); }
+
+    // --- Fee structure ---
+    function addFeeRow(){
+      const tb = $('feeTable').querySelector('tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><input value="New Component" /></td><td><input value="0" /></td><td><button class="btn ghost" onclick="removeRow(this)">Remove</button></td>`;
+      tb.appendChild(tr);
+      updateFeeTotal();
+    }
+    function removeRow(btn){ btn.closest('tr').remove(); updateFeeTotal(); }
+    function updateFeeTotal(){
+      const rows = Array.from($('feeTable').querySelectorAll('tbody tr'));
+      let total = 0;
+      rows.forEach(r=>{ const amount = Number(r.cells[1].querySelector('input').value) || 0; total += amount });
+      $('feeTotal').innerText = total;
+      $('statFee').innerText = '₹' + total;
+    }
+    // watch fee inputs
+    document.addEventListener('input', (e)=>{ if(e.target && e.target.closest && e.target.closest('#feeTable')) updateFeeTotal(); })
+    updateFeeTotal();
+
+    // --- Syllabus ---
+    function addSyllabus(){ const t=$('syTitle').value.trim(), d=$('syDesc').value.trim(); if(!t) return alert('Enter topic title');
+      const id = 'sy_'+Date.now();
+      const wrap = document.createElement('div'); wrap.className='accordion-item'; wrap.id = id;
+      wrap.innerHTML = `<div class="acc-head" onclick="toggleAcc('${id}')"><div><strong>${t}</strong><div style='font-size:12px;color:var(--muted)'>${d}</div></div><div>▸</div></div><div class='acc-body'>${d}<div style='margin-top:8px'><button class='btn ghost' onclick="this.closest(\'.accordion-item\').remove(); event.stopPropagation();">Remove</button></div></div>`;
+      $('syllabusArea').appendChild(wrap);
+      $('syTitle').value=''; $('syDesc').value='';
+    }
+    function toggleAcc(id){ const el = $(id); const body = el.querySelector('.acc-body'); if(body.style.display==='block'){ body.style.display='none' } else { body.style.display='block' } }
+
+    // --- Results ---
+    function addResultRow(){ const tb = $('resultTable').querySelector('tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><input placeholder="Student name" /></td><td><input type="number" min="0" max="100" oninput="computeGrade(this)" /></td><td class="grade">—</td><td><button class="btn ghost" onclick="this.closest('tr').remove(); computeStats()">Remove</button></td>`;
+      tb.appendChild(tr);
+    }
+    function computeGrade(input){ const tr = input.closest('tr'); const marks = Number(input.value) || 0; let grade='F'; if(marks>=90) grade='A+'; else if(marks>=80) grade='A'; else if(marks>=70) grade='B+'; else if(marks>=60) grade='B'; else if(marks>=50) grade='C'; else grade='F'; tr.querySelector('.grade').innerText = grade; computeStats(); }
+    function computeStats(){ const rows = Array.from($('resultTable').querySelectorAll('tbody tr')); let sum=0, count=0; rows.forEach(r=>{ const v = Number(r.cells[1].querySelector('input').value); if(!isNaN(v)){ sum+=v; count++ } }); $('statAvg').innerText = count? Math.round((sum/count)*100)/100 : '—'; }
+
+    // --- Persistence ---
+    function saveData(){ const data = {students, feeHTML: $('feeTable').querySelector('tbody').innerHTML, syllabusHTML: $('syllabusArea').innerHTML, resultHTML: $('resultTable').querySelector('tbody').innerHTML, program: $('program').value, branch: $('branch').value};
+      localStorage.setItem('students_portal_data', JSON.stringify(data)); alert('Saved to localStorage'); }
+    function loadData(){ const raw = localStorage.getItem('students_portal_data'); if(!raw) return alert('No saved data');
+      try{ const d = JSON.parse(raw); students = d.students || []; renderStudents(); $('feeTable').querySelector('tbody').innerHTML = d.feeHTML || '';
+        $('syllabusArea').innerHTML = d.syllabusHTML || '';
+        $('resultTable').querySelector('tbody').innerHTML = d.resultHTML || '';
+        if(d.program) {$('program').value=d.program; onProgramChange();}
+        if(d.branch) {$('branch').value=d.branch}
+        updateFeeTotal(); computeStats();
+      }catch(e){ alert('Failed to load: '+e.message) }
+    }
+
+    // initial demo rows
+    addResultRow();
+
+    // small UX: recompute totals periodically in case user edits HTML directly
+    setInterval(()=>{ updateFeeTotal(); computeStats() }, 1500);
+
+  </script>
+</body>
+</html>
